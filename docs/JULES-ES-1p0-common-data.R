@@ -376,7 +376,7 @@ Y_sum_level1a_list <- mat2list(Y_sum_level1a)
 YAnom_sum_level1a_list <- mat2list(YAnom_sum_level1a)
 
 
-emlist_km_Y_level1a_file <- "../emlist_km_Y_level1a_2022-04-08.rdata"
+emlist_km_Y_level1a_file <- "data/emlist_km_Y_level1a_2022-04-08.rdata"
 
 if (file.exists(emlist_km_Y_level1a_file )) {
   load(emlist_km_Y_level1a_file )
@@ -389,7 +389,7 @@ if (file.exists(emlist_km_Y_level1a_file )) {
   
 }
 
-emlist_km_YAnom_level1a_file <- "../emlist_km_YAnom_level1a_2022-04-08.rdata"
+emlist_km_YAnom_level1a_file <- "data/emlist_km_YAnom_level1a_2022-04-08.rdata"
 
 
 if (file.exists(emlist_km_YAnom_level1a_file )) {
