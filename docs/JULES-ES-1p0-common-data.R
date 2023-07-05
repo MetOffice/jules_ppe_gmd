@@ -108,6 +108,32 @@ if (file.exists(global_mean_timeseries_wave00_file)) {
   
 }
 
+
+
+# landCoverFrac testing
+# Result: landCoverFrac is actually 17 dimensions - some flat. In reality, is all PFTs
+# Doesn't really make sense as a single "modern value".
+# landCoverFrac_lnd_mean_ens_wave00 <- makeTimeseriesEnsemble(ensloc = ensloc_wave00, nstart = 0, nend = 498, variable = "landCoverFrac_lnd_sum")
+# ensmember <- enslist_wave00[1]
+# 
+# fn <- paste0(ensloc_wave00,'JULES-ES-1p0_',ensmember,'_Annual_global.nc')
+# 
+# try(nc <- nc_open(paste0(fn)))
+# try(localtime <- ncvar_get(nc, 'time'))
+# 
+# # This part compensates for the fact that sometimes years are missing
+# try(localyear <- floor(2010 + (localtime / ysec)))
+# cn = 1850:2013
+# try(ix <- which(cn%in%localyear))
+# 
+# variable = "landCoverFrac_lnd_mean"
+# #variable <- "baresoilFrac_lnd_sum"
+# try(dat <- extractTimeseries(nc, variable))
+
+
+
+
+
 # ------------------------------------------------------------------------------
 # Get standard members
 #

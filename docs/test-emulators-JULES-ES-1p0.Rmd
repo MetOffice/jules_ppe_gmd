@@ -59,7 +59,7 @@ loostats_km_Y_select_level1a <- lapply(emlist_km_Y_select_level1a, FUN = kmLooSt
 ```
 
 ```{r, fig.height = 12, fig.width = 12}
-pdf(file = 'figs/kmloostats_Y_level1a.pdf', width = 12, height = 12)
+#pdf(file = 'figs/kmloostats_Y_level1a.pdf', width = 12, height = 12)
 par(mfrow = c(4,4), mar = c(3,4,2,2), oma = c(4,4,4,0.1))
 for(i in 1:length(loolist_km_Y_select_level1a)){
   
@@ -80,7 +80,7 @@ mtext('Actual', side = 1, line = 1, outer = TRUE, cex = 2 )
 mtext('Predicted', side = 2, line = 0, outer = TRUE, cex = 2) 
 mtext('Level 1a ensemble outputs', side = 3, line = 0, outer = TRUE, cex = 2)
 
-dev.off()
+#dev.off()
 
 
 ```
@@ -166,7 +166,7 @@ wave01colvec <- rep(wave01col, nrow(ens_select_wave01_mv$datmat[without_outliers
 
 wave00_wave01_colvec <- c(wave00colvec, wave01colvec)
 
-pdf(file = 'figs/figA01.pdf', width = 12, height = 12)
+#pdf(file = 'figs/figA01.pdf', width = 12, height = 12)
 #pdf(file = 'figs/kmloostats_Y_wave00_level1a_wave01.pdf', width = 12, height = 12)
 par(mfrow = c(4,4), mar = c(3,4,2,2), oma = c(4,4,4,0.1))
 for(i in 1:length(loolist_km_Y_select_wave00_level1a_wave01)){
@@ -188,9 +188,75 @@ mtext('Actual', side = 1, line = 1, outer = TRUE, cex = 2 )
 mtext('Predicted', side = 2, line = 0, outer = TRUE, cex = 2) 
 mtext('wave00 Level 1a and wave01 ensemble outputs', side = 3, line = 0, outer = TRUE, cex = 2)
 
-dev.off()
+#dev.off()
 
 ```
+
+## Probability Calibration
+Are the uncertainty estimates of the emulator consistent with the observed errors?
+Use a rank histogram method.
+
+```{r}
+
+ # Rank histograms for checking the uncertainty.
+  # The principle behind the rank histogram is quite simple. 
+  # Ideally, one property that is desired from an EF is reliable probabilities;
+  # if ensemble relative frequency suggests P percent probability of occurrence,
+  # the event truly ought to have P probability of occurring. 
+  # For this probability to be reliable, the set of ensemble member forecast values
+  # at a given point and the true state (the verification) ought to be able to be 
+  # considered random samples from the same probability distribution.
+  # This reliability then implies in turn that if an n-member ensemble and the
+  # verification are pooled into a vector and sorted from lowest to highest,
+  # then the verification is equally likely to occur in each of the n + 1 possible ranks. 
+  # If the rank of the verification is tallied and the process repeated over many
+  # independent sample points, a uniform histogram over the possible ranks should result.
+  # From https://journals.ametsoc.org/doi/full/10.1175/1520-0493%282001%29129%3C0550%3AIORHFV%3E2.0.CO%3B2
+  
+  looRankHist = function(obs, pred_mean, pred_sd, n = 1000){
+    # a version of the rank histogram     
+    obs_ranks = rep(NA, length(obs))
+    
+    for(i in 1:length(obs)){
+      ranks = rank(c(obs[i], rnorm(n = n, mean = pred_mean[i], sd = pred_sd[i])))
+      obs_ranks[i] = ranks[1]
+    }
+    
+    out = obs_ranks/(n+1)
+    out
+  }
+
+```
+
+```{r, fig.width = 12, fig.height = 10}
+par( mfrow = c(5,3))
+
+for(i in 1:length(emlist_km_Y_select_wave00_level1a_wave01)){
+  
+  y <- emlist_km_Y_select_wave00_level1a_wave01[[i]]@y
+  loo <- loolist_km_Y_select_wave00_level1a_wave01[[i]]
+  
+  loo_rank_hist <-  looRankHist(obs = y,
+                                pred_mean = loo$mean,
+                                pred_sd = loo$sd,
+                                n = 1000)
+  
+  
+  
+  #pdf(file = 'graphics/rankhist.pdf', width = 6, height =4)
+  par(las = 1, fg = 'white')
+  hist(loo_rank_hist, col = 'grey', 
+       axes = FALSE, main = colnames(Y_select_wave00_level1a)[i],
+       xlab = 'Rank'
+  )
+  axis(1, col = 'black')
+  axis(2, col = 'black')
+  
+}
+
+
+```
+
 
 
 ## Entire anomaly ensemble (select outputs)
@@ -228,7 +294,7 @@ loostats_km_YAnom_select_wave00_level1a_wave01 <- lapply(emlist_km_YAnom_select_
 ```{r, fig.height = 12, fig.width = 12}
 
 
-pdf(file = 'figs/figA02.pdf', width = 12, height = 12)
+#pdf(file = 'figs/figA02.pdf', width = 12, height = 12)
 #pdf(file = 'figs/kmloostats_YAnom_wave00_level1a_wave01.pdf', width = 12, height = 12)
 par(mfrow = c(4,4), mar = c(3,4,2,2), oma = c(4,4,4,0.1))
 for(i in 1:length(loolist_km_YAnom_select_wave00_level1a_wave01)){
@@ -250,14 +316,14 @@ mtext('Actual', side = 1, line = 1, outer = TRUE, cex = 2 )
 mtext('Predicted', side = 2, line = 0, outer = TRUE, cex = 2) 
 mtext('wave00 Level 1a and wave01 ensemble anomaly', side = 3, line = 0, outer = TRUE, cex = 2)
 
-dev.off()
+#dev.off()
 
 ```
 
 ## PMAE summary of level 1 and entire ensemble
 ```{r, fig.width = 5, fig.height = 10}
 
-pdf(file = 'figs/figA03.pdf', width = 5, height = 10)
+#pdf(file = 'figs/figA03.pdf', width = 5, height = 10)
 #pdf(file = 'figs/PMAE_comparison.pdf', width = 5, height = 10)
 
 
@@ -285,7 +351,7 @@ text(YAnom_select_level1a_pmae, YAnom_select_wave00_level1a_wave01_pmae, labels 
      pos = 3,cex = 0.6, col = 'darkgrey'
      )
 
-dev.off()
+#dev.off()
 ```
 
 
@@ -336,7 +402,7 @@ loostats_km_Y_level1a_wave01 <- lapply(fit_list_const_level1a_wave01, FUN = kmLo
 
 ```{r, fig.width = 12, fig.height = 6}
 
-pdf(file = 'figs/kmloostats_Y_level1a.pdf', width = 12, height = 12)
+#pdf(file = 'figs/kmloostats_Y_level1a.pdf', width = 12, height = 12)
 par(mfrow = c(2,4), mar = c(3,4,2,2), oma = c(4,4,4,0.1))
 for(i in 1:length(loolist_km_Y_level1a)){
   
@@ -356,9 +422,9 @@ mtext('Actual', side = 1, line = 1, outer = TRUE, cex = 2 )
 mtext('Predicted', side = 2, line = 0, outer = TRUE, cex = 2) 
 mtext('Level 1a ensemble outputs', side = 3, line = 0, outer = TRUE, cex = 2)
 
-dev.off()
+#dev.off()
 
-pdf(file = 'figs/kmloostats_Y_level1a.pdf', width = 12, height = 12)
+#pdf(file = 'figs/kmloostats_Y_level1a.pdf', width = 12, height = 12)
 for(i in 1:length(loolist_km_Y_level1a)){
   
   y <- Y_const_level1a_wave01_scaled[, i]
@@ -401,9 +467,9 @@ We see that the error stats for some of the outputs from wave01 are worse, but t
 
 "pmae" is "proportional mean absolue error", which is the mean absolute error expressed as a percentage of the original (minimally constrained) ensemble range in that output. 
 
-```{r, fig.width = 12, fig.height = 6}
+```{r, fig.width = 12, fig.height = 12}
 
-pdf(file = 'figs/kmloostats_Y_level1a.pdf', width = 12, height = 12)
+#pdf(file = 'figs/kmloostats_Y_level1a.pdf', width = 12, height = 12)
 par(mfrow = c(2,4), mar = c(3,4,2,2), oma = c(4,4,4,0.1))
 for(i in 1:length(loolist_km_Y_level1a)){
   
@@ -439,7 +505,7 @@ mtext('Actual', side = 1, line = 1, outer = TRUE, cex = 2 )
 mtext('Predicted', side = 2, line = 0, outer = TRUE, cex = 2) 
 mtext('Level 2 constrained ensemble outputs', side = 3, line = 0, outer = TRUE, cex = 2)
 
-dev.off()
+#dev.off()
 
 ```
 
@@ -476,7 +542,7 @@ loolist_km_Y_level1a_wave01_level2 <- rapply(loolist_km_Y_level1a_wave01, f = fu
 
 ```{r, fig.width = 12, fig.height = 12}
 
-pdf(file = 'figs/kmloostats_Y_level1a.pdf', width = 12, height = 12)
+#pdf(file = 'figs/kmloostats_Y_level1a.pdf', width = 12, height = 12)
 par(mfrow = c(2,2), mar = c(3,4,2,2), oma = c(4,4,4,0.1))
 for(i in 1:length(loolist_km_Y_level1a_level2)){
   
@@ -509,7 +575,7 @@ mtext('Level 2 wave 00 ensemble outputs', side = 3, line = 0, outer = TRUE, cex 
 reset()
 legend('topleft', pch = 19, legend = c('wave00', 'wave01'), col = c(wave00col, wave01col ), horiz = TRUE)
 
-dev.off()
+#dev.off()
 
 
 ```
@@ -523,7 +589,7 @@ None of the predictions are outside the uncertainty bounds, which suggests they 
 
 ```{r, fig.width = 10, fig.height = 10}
 
-pdf(file = 'figs/kmloostats_Y_level1a.pdf', width = 12, height = 12)
+#pdf(file = 'figs/kmloostats_Y_level1a.pdf', width = 12, height = 12)
 par(mfrow = c(4,1), mar = c(3,4,2,2), oma = c(4,4,4,0.1))
 for(i in 1:length(loolist_km_Y_level1a_level2)){
   
@@ -566,7 +632,7 @@ for(i in 1:length(loolist_km_Y_level1a_level2)){
  reset()
  legend('topleft', pch = 19, legend = c('wave00', 'wave01'), col = c(wave00col, wave01col ), horiz = TRUE)
  
- dev.off()
+# dev.off()
 
 ```
 ```{r}
@@ -672,6 +738,26 @@ pred_level2_ix <- withinConstraints(pred_km_Y_const_level1a_scaled, AW_const)
 
 ```
 
+
+```{r}
+#Also calculate the uncertainty
+unc_km_Y_const_level1a_scaled <- matrix(ncol = ncol(Y_const_level1a_scaled), nrow = nrow(Y_const_level1a_scaled))
+colnames(unc_km_Y_const_level1a_scaled) <- colnames(Y_const_level1a_scaled)
+
+for(i in 1:ncol(Y_const_level1a_scaled)){
+  
+  unc <- loolist_km_Y_const_level1a_scaled[[i]]$sd
+  unc_km_Y_const_level1a_scaled[, i] <- unc
+  
+}
+
+#pred_level2_ix <- withinConstraints(pred_km_Y_const_level1a_scaled, AW_const)
+
+
+```
+
+
+
 Plotting the predictions, with a special focus on the constrained members. 
 The message is, to do better on predicting the members, we need to do better with the cVeg emulator. Many of its members are way too low, and this is dragging down the predictions. Some are false positives though.
 Could we plot Loo error vs the parameters?
@@ -715,7 +801,7 @@ colvec[tn_ix] <- 'darkgrey'
 pchvec[tn_ix] <- 21
   
 
-pdf(width = 10, height = 10, file = 'figs/figA04.pdf')
+#pdf(width = 10, height = 10, file = 'figs/figA04.pdf')
 #pdf(width = 10, height = 10, file = 'figs/Y_const_loo.pdf')
 par(mfrow = c(2,2), oma = c(0.1,0.1,4,0.1))
 for(i in 1:4){
@@ -737,8 +823,17 @@ reset()
 
 legend('top', legend = c('True positive', 'False Positive', 'False Negative', 'True Negative', 'lower bound', 'upper bound'), pch = c(19,19, 19, 21, NA, NA), col = c('blue', 'red', 'gold', 'darkgrey', 'darkgrey', 'darkgrey'), lty = c(NA,NA,NA,NA, 'solid', 'dashed'), horiz = TRUE)
 
-dev.off()
+#dev.off()
 
+```
+
+
+```{r, fig.width = 7, fig.height = 7}
+
+
+plot(log(Y_const_level1a_scaled[ ,4]), log(pred_km_Y_const_level1a_scaled[ ,4]), type = 'n', las = 1, main = colnames(Y_const_level1a_scaled)[4],
+     xlab = 'model', ylab = 'emulator')
+points(log(Y_const_level1a_scaled[ ,4]), log(pred_km_Y_const_level1a_scaled[ ,4]), col = colvec, pch = pchvec)
 ```
 
 

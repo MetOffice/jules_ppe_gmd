@@ -320,10 +320,10 @@ colnames(oat_var_sensmat_level1a_Y) <- colnames(X_level1a)
 
 ```{r, fig.width = 7, fig.height = 8}
 
-pdf(file = 'figs/oat_var_sensmat_level1a_Y.pdf', width = 7, height = 8)
+#pdf(file = 'figs/oat_var_sensmat_level1a_Y.pdf', width = 7, height = 8)
 oaatSensvarSummaryPlot(oat_var_sensmat_level1a_Y)
 
-dev.off()
+#dev.off()
 
 ```
 
@@ -362,9 +362,9 @@ colnames(oat_var_sensmat_level1a_YAnom) <- colnames(X_level1a)
 
 ```{r, fig.width = 7, fig.height = 8}
 
-pdf(file = 'figs/oat_var_sensmat_level1a_YAnom.pdf', width = 7, height = 8)
+#pdf(file = 'figs/oat_var_sensmat_level1a_YAnom.pdf', width = 7, height = 8)
 oaatSensvarSummaryPlot(oat_var_sensmat_level1a_YAnom)
-dev.off()
+#dev.off()
 
 ```
 
@@ -457,13 +457,13 @@ Y_oaat_const_level1a_scaled_norm <- normalize(Y_oaat_const_level1a_scaled)
         }
 
 X_oaat_level1a_unnorm <- unnormalize(X_oaat_level1a, un_mins = lhs_min, un_maxes = lhs_max)        
-pdf(file = 'figs/Y_oaat_const_level1a_scaled_norm.pdf', width = 10, height = 10)
+#pdf(file = 'figs/Y_oaat_const_level1a_scaled_norm.pdf', width = 10, height = 10)
 oaatLinePlotMulti(X_oaat = X_oaat_level1a_unnorm, Y_oaat = Y_oaat_const_level1a_scaled_norm ,  n_oaat = 21, nr = 6, nc = 6,
                   lwd = 3, col = cbPal[c(1,2,6,8)])
   
 reset()
 legend('top', c('nbp', 'npp', 'csoil', 'cveg'), col = cbPal[c(1,2,6,8)], lty = 'solid', lwd = 3, horiz = TRUE)
-dev.off()
+#dev.off()
 
 ```
 
@@ -495,14 +495,14 @@ for(i in 1:ncol(Y_oaat_const_level1a_wave01_scaled)){
 ```{r, fig.width=10, fig.height = 10}
 Y_oaat_const_level1a_wave01_scaled_norm <- normalize(Y_oaat_const_level1a_wave01_scaled)
 
-pdf(file = 'figs/fig09.pdf', width = 10, height = 10)
+#pdf(file = 'figs/fig09.pdf', width = 10, height = 10)
 #pdf(file = 'figs/Y_oaat_const_level1a_wave01_scaled_norm.pdf', width = 10, height = 10)
 oaatLinePlotMulti(X_oaat = X_oaat_level1a_unnorm, Y_oaat = Y_oaat_const_level1a_wave01_scaled_norm ,  n_oaat = 21, nr = 6, nc = 6,
                   lwd = 3, col = cbPal[c(1,2,6,8)])
   
 reset()
 legend('top', c('nbp', 'npp', 'csoil', 'cveg'), col = cbPal[c(1,2,6,8)], lty = 'solid', lwd = 3, horiz = TRUE)
-dev.off()
+#dev.off()
 
 ```
 
@@ -559,11 +559,11 @@ colnames(oat_var_sensmat_level1a_wave01_Y) <- colnames(X_level1a)
 
 ```{r, fig.width = 7, fig.height = 8}
 
-pdf(file = 'figs/fig07.pdf', width = 7, height = 8)
+#pdf(file = 'figs/fig07.pdf', width = 7, height = 8)
 #pdf(file = 'figs/oat_var_sensmat_level1a_wave01_Y.pdf', width = 7, height = 8)
 oaatSensvarSummaryPlot(oat_var_sensmat_level1a_wave01_Y)
 
-dev.off()
+#dev.off()
 
 ```
 
@@ -613,11 +613,11 @@ colnames(oat_var_sensmat_level1a_wave01_YAnom) <- colnames(X_level1a)
 
 ```{r, fig.width = 7, fig.height = 8}
 
-pdf(file = 'figs/fig08.pdf', width = 7, height = 8)
+#pdf(file = 'figs/fig08.pdf', width = 7, height = 8)
 #pdf(file = 'figs/oat_var_sensmat_level1a_wave01_YAnom.pdf', width = 7, height = 8)
 oaatSensvarSummaryPlot(oat_var_sensmat_level1a_wave01_YAnom)
 
-dev.off()
+#dev.off()
 
 ```
 
@@ -672,10 +672,10 @@ rownames(FAST_total_Y_sum_level1a) <- colnames(Y_sum_level1a)
 
 Plot the summary matrix
 ```{r, fig.width = 8, fig.height = 10, message = FALSE, warning=FALSE}
-pdf(file = 'figs/figA05.pdf', width = 7, height = 8)
+#pdf(file = 'figs/figA05.pdf', width = 7, height = 8)
 #pdf(file = 'figs/FAST_sensmat_Y_level1a_wave01.pdf', width = 7, height = 8)
 sensMatSummaryPlot(FAST_total_Y_sum_level1a)
-dev.off()
+#dev.off()
 
 ```
 
@@ -721,9 +721,9 @@ rownames(FAST_total_YAnom_sum_level1a) <- colnames(YAnom_sum_level1a)
 Plot the sensitivity summary matrix
 ```{r, fig.width = 8, fig.height = 10}
 
-pdf(file = 'figs/figA06.pdf', width = 7, height = 8)
+#pdf(file = 'figs/figA06.pdf', width = 7, height = 8)
 sensMatSummaryPlot(FAST_total_YAnom_sum_level1a)
-dev.off()
+#dev.off()
 
 ```
 
