@@ -87,6 +87,32 @@ legend('topleft', pch = 19, col = c( zred, zblue), legend = c('failed', 'zero ca
 
 ```
 
+
+## Failure analysis marginal plots 
+
+Are there hard thresholds after which the model always fails? (Question from review comments).
+Run failures are in t
+
+```{r, fig.width = 10, fig.height = 10}
+
+
+y_level0 <- Y_level0[,'npp_nlim_lnd_sum']
+
+
+par(mfrow = c(5,7), mar = c(3,1,3,1), oma = c(1,1,5,1))
+for(i in 1:p){
+  plot(X_level0[,i], y_level0, xlab = '', ylab = '', main = colnames(X_level0)[i], xlim = c(0,1))
+  points(X_nlevel0[,i], rep(0, nrow(X_nlevel0)), col = zred)
+  
+}
+mtext('NPP', outer = TRUE, side = 3, cex = 2, line = 2)
+
+```
+
+
+
+
+
 # Visualising the ensemble range
 
 It's important to remember that the design of the experiment is multiplication factors of the original parameters. This might be important for the "hold" value in a sensitivity analysis, as the "standard" value and the median value of the ensemble will not be the same.

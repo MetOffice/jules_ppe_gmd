@@ -3,7 +3,10 @@
 
 # (C) Crown copyright, Met Office
 # default jules parameters and perturbation limits in the ensemble (all PFTs).
+source('JULES-ES-1p0-common-packages.R')
+source('JULES-ES-1p0-common-functions.R')
 source('default_jules_parameter_perturbations.R')
+
 
 ## ----------------------------------------------------------------------
 ## Data locations and constants
@@ -25,11 +28,6 @@ cbPal <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D
 wave00col <- 'skyblue2'
 wave01col <- 'tomato2'
 
-#wave00col <- 'dodgerblue2'
-#wave01col <- 'firebrick'
-#rangecol <- 'grey'
-
-
 zissou5 <- wes_palette('Zissou1', 5, type = c('discrete', 'continuous'))
 zblue <- makeTransparent(as.character(zissou5)[1], 150)
 zred <- makeTransparent(as.character(zissou5)[5], 150)
@@ -40,7 +38,7 @@ years <- 1850:2013
 
 # We're just interested in the "sum" (global totals) data, not the "mean" (global means) data
 y_names_sum <- c('nbp_lnd_sum', 'fLuc_lnd_sum', 'npp_nlim_lnd_sum', 'cSoil_lnd_sum',
-                 'cVeg_lnd_sum', 'landCoverFrac_lnd_sum', 'fHarvest_lnd_sum',
+                 'cVeg_lnd_sum', 'fHarvest_lnd_sum',
                  'lai_lnd_sum', 'rh_lnd_sum', 'treeFrac_lnd_sum', 'c3PftFrac_lnd_sum', 
                  'c4PftFrac_lnd_sum', 'shrubFrac_lnd_sum', 'baresoilFrac_lnd_sum')
 
@@ -58,13 +56,12 @@ y_names_all <-  c("nbp_lnd_sum", "year" ,"nbp_lnd_mean", "fLuc_lnd_sum", "fLuc_l
 y_names_select <-  c("npp_nlim_lnd_sum", "nbp_lnd_sum", "cSoil_lnd_sum", "cVeg_lnd_sum",
                      "lai_lnd_mean",
                      "rh_lnd_sum" , "fLuc_lnd_sum", "fHarvest_lnd_sum",  
-                     "landCoverFrac_lnd_mean", 
                      "treeFrac_lnd_mean" , "baresoilFrac_lnd_mean",
                      "shrubFrac_lnd_mean", "c3PftFrac_lnd_mean",
                      "c4PftFrac_lnd_mean"   
 )
 
-select_units <- c('GtC/year', 'GtC/year', 'GtC', 'GtC', 'index', 'GtC/year','GtC/year', 'GtC/year', '%', '%', '%', '%', '%', '%')
+select_units <- c('GtC/year', 'GtC/year', 'GtC', 'GtC', 'index', 'GtC/year','GtC/year', 'GtC/year', '%', '%', '%', '%', '%')
 names(select_units) <- y_names_select
 
 ## --------------------------------------------------------------------------------------------------------
@@ -402,7 +399,7 @@ Y_sum_level1a_list <- mat2list(Y_sum_level1a)
 YAnom_sum_level1a_list <- mat2list(YAnom_sum_level1a)
 
 
-emlist_km_Y_level1a_file <- "data/emlist_km_Y_level1a_2022-04-08.rdata"
+emlist_km_Y_level1a_file <- "data/emlist_km_Y_level1a_2023-07-12.rdata"
 
 if (file.exists(emlist_km_Y_level1a_file )) {
   load(emlist_km_Y_level1a_file )
@@ -415,7 +412,7 @@ if (file.exists(emlist_km_Y_level1a_file )) {
   
 }
 
-emlist_km_YAnom_level1a_file <- "data/emlist_km_YAnom_level1a_2022-04-08.rdata"
+emlist_km_YAnom_level1a_file <- "data/emlist_km_YAnom_level1a_2023-07-12.rdata"
 
 
 if (file.exists(emlist_km_YAnom_level1a_file )) {
@@ -442,7 +439,7 @@ nstart <- 499
 nend <- (nstart + ntrain_wave01) - 1
 
 
-ensemble_wave01_file <- "data/ensemble_wave01_2022-04-08.rdata"
+ensemble_wave01_file <- "data/ensemble_wave01_2023-07-12.rdata"
   
 if (file.exists(ensemble_wave01_file)) {
   load(ensemble_wave01_file)
@@ -457,7 +454,7 @@ if (file.exists(ensemble_wave01_file)) {
   save(ens_wave01_mv, file = ensemble_wave01_file)
 }
 
-ensemble_wave01_anom_file <- "data/ensemble_wave01_2022-05-25.rdata"
+ensemble_wave01_anom_file <- "data/ensemble_wave01_anom_2023-07-12.rdata"
 
 if (file.exists(ensemble_wave01_anom_file )) {
   load(ensemble_wave01_anom_file )
@@ -474,7 +471,7 @@ if (file.exists(ensemble_wave01_anom_file )) {
 
 
 # the "select" wave01 ensemble, to tie in with constraints later
-ens_select_wave01_mv_file <- "data/ens_select_wave01_mv_file_2022-09-26.rdata"
+ens_select_wave01_mv_file <- "data/ens_select_wave01_mv_file_2023-07-12.rdata"
 
 if (file.exists(ens_select_wave01_mv_file)) {
   load(ens_select_wave01_mv_file)
@@ -489,7 +486,7 @@ if (file.exists(ens_select_wave01_mv_file)) {
   save(ens_select_wave01_mv, file = ens_select_wave01_mv_file)
 }
 
-ens_select_wave01_mv_anom_file <- "data/ens_select_wave01_mv_anom_file_2022-09-26.rdata"
+ens_select_wave01_mv_anom_file <- "data/ens_select_wave01_mv_anom_file_2023-07-12.rdata"
 
 if (file.exists(ens_select_wave01_mv_anom_file)) {
   load(ens_select_wave01_mv_anom_file )
