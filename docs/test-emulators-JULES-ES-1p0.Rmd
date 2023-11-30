@@ -166,7 +166,7 @@ wave01colvec <- rep(wave01col, nrow(ens_select_wave01_mv$datmat[without_outliers
 
 wave00_wave01_colvec <- c(wave00colvec, wave01colvec)
 
-#pdf(file = 'figs/figA01.pdf', width = 12, height = 12)
+pdf(file = 'figs/figA01.pdf', width = 12, height = 12)
 #pdf(file = 'figs/kmloostats_Y_wave00_level1a_wave01.pdf', width = 12, height = 12)
 par(mfrow = c(4,4), mar = c(3,4,2,2), oma = c(4,4,4,0.1))
 for(i in 1:length(loolist_km_Y_select_wave00_level1a_wave01)){
@@ -189,7 +189,7 @@ mtext('Actual', side = 1, line = 1, outer = TRUE, cex = 2 )
 mtext('Predicted', side = 2, line = 0, outer = TRUE, cex = 2) 
 mtext('wave00 Level 1a and wave01 ensemble outputs', side = 3, line = 0, outer = TRUE, cex = 2)
 
-#dev.off()
+dev.off()
 
 ```
 
@@ -230,6 +230,8 @@ Use a rank histogram method.
 ```
 
 ```{r, fig.width = 12, fig.height = 10}
+
+pdf(file = 'figs/figA04.pdf', width = 10, height = 8)
 par( mfrow = c(5,3), mar = c(5,5,3,2))
 
 for(i in 1:length(emlist_km_Y_select_wave00_level1a_wave01)){
@@ -244,7 +246,8 @@ for(i in 1:length(emlist_km_Y_select_wave00_level1a_wave01)){
   
   
   
-  #pdf(file = 'graphics/rankhist.pdf', width = 6, height =4)
+
+  
   par(las = 1, fg = 'white')
   hist(loo_rank_hist, col = 'grey', 
        axes = FALSE, main = colnames(Y_select_wave00_level1a)[i],
@@ -254,7 +257,7 @@ for(i in 1:length(emlist_km_Y_select_wave00_level1a_wave01)){
   axis(2, col = 'black')
   
 }
-
+dev.off()
 
 ```
 
@@ -297,6 +300,7 @@ loostats_km_YAnom_select_wave00_level1a_wave01 <- lapply(emlist_km_YAnom_select_
 
 #pdf(file = 'figs/figA02.pdf', width = 12, height = 12)
 #pdf(file = 'figs/kmloostats_YAnom_wave00_level1a_wave01.pdf', width = 12, height = 12)
+pdf(file = 'figs/figA02.pdf', width = 12, height = 12)
 par(mfrow = c(4,4), mar = c(3,4,2,2), oma = c(4,4,4,0.1))
 for(i in 1:length(loolist_km_YAnom_select_wave00_level1a_wave01)){
   
@@ -317,11 +321,13 @@ mtext('Actual', side = 1, line = 1, outer = TRUE, cex = 2 )
 mtext('Predicted', side = 2, line = 0, outer = TRUE, cex = 2) 
 mtext('wave00 Level 1a and wave01 ensemble anomaly', side = 3, line = 0, outer = TRUE, cex = 2)
 
-#dev.off()
+dev.off()
 
 ```
 
 ```{r, fig.width = 12, fig.height = 10}
+
+pdf(file = 'figs/figA05.pdf', width = 10, height = 8)
 par( mfrow = c(5,3), mar = c(5,5,4,2))
 
 for(i in 1:length(emlist_km_YAnom_select_wave00_level1a_wave01)){
@@ -336,7 +342,8 @@ for(i in 1:length(emlist_km_YAnom_select_wave00_level1a_wave01)){
   
   
   
-  #pdf(file = 'graphics/rankhist.pdf', width = 6, height =4)
+
+
   par(las = 1, fg = 'white')
   hist(loo_rank_hist, col = 'grey', 
        axes = FALSE, main = colnames(YAnom_select_wave00_level1a)[i],
@@ -346,7 +353,7 @@ for(i in 1:length(emlist_km_YAnom_select_wave00_level1a_wave01)){
   axis(2, col = 'black')
   
 }
-
+dev.off()
 
 ```
 
@@ -355,6 +362,8 @@ for(i in 1:length(emlist_km_YAnom_select_wave00_level1a_wave01)){
 
 #pdf(file = 'figs/figA03.pdf', width = 5, height = 10)
 #pdf(file = 'figs/PMAE_comparison.pdf', width = 5, height = 10)
+# Becomes A05 for revised submission
+pdf(file = 'figs/figA03.pdf', width = 5, height = 10)
 
 
 Y_select_level1a_pmae <- sapply(loostats_km_Y_select_level1a, function(x) x$pmae)
@@ -381,7 +390,7 @@ text(YAnom_select_level1a_pmae, YAnom_select_wave00_level1a_wave01_pmae, labels 
      pos = 3,cex = 0.6, col = 'darkgrey'
      )
 
-#dev.off()
+dev.off()
 ```
 
 
@@ -833,6 +842,8 @@ pchvec[tn_ix] <- 21
 
 #pdf(width = 10, height = 10, file = 'figs/figA04.pdf')
 #pdf(width = 10, height = 10, file = 'figs/Y_const_loo.pdf')
+# Becomes figure A06 for revised submission
+pdf(width = 10, height = 10, file = 'figs/figA06.pdf')
 par(mfrow = c(2,2), oma = c(0.1,0.1,4,0.1))
 for(i in 1:4){
 plot(Y_const_level1a_scaled[ ,i], pred_km_Y_const_level1a_scaled[ ,i], type = 'n', las = 1, main = colnames(Y_const_level1a_scaled)[i],
@@ -853,7 +864,7 @@ reset()
 
 legend('top', legend = c('True positive', 'False Positive', 'False Negative', 'True Negative', 'lower bound', 'upper bound'), pch = c(19,19, 19, 21, NA, NA), col = c('blue', 'red', 'gold', 'darkgrey', 'darkgrey', 'darkgrey'), lty = c(NA,NA,NA,NA, 'solid', 'dashed'), horiz = TRUE)
 
-#dev.off()
+dev.off()
 
 ```
 

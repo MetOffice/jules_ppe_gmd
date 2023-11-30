@@ -416,14 +416,6 @@ It's hard to maintain a high vegetation carbon in particular.
 Further idea: What parameter values might you choose to do this, and what might be the trade-offs you have to make?
 
 
-```{r}
-
-Y_const_level1a_scaled_list <- mat2list(Y_const_level1a_scaled)
-fit_list_const_level1a <- mclapply(X = Y_const_level1a_scaled_list, FUN = km, formula = ~., design = X_level1a,
-                                   mc.cores = 4, control = list(trace = FALSE))
-
-```
-
 
 ```{r}
 # Check that oatSensVar and the plotting make sense
@@ -452,25 +444,6 @@ oaatLinePlot(X_oaat = X_oaat_level1a, y_oaat_mean = y_oaat$mean, y_oaat_sd = y_o
 ```
 
 
-```{r}
-# Use this to build a list
-
-Y_const_level1a_scaled_list <- mat2list(Y_const_level1a_scaled)
-fit_list_const_level1a <- mclapply(X = Y_const_level1a_scaled_list, FUN = km, formula = ~., design = X_level1a,
-                                   mc.cores = 4, control = list(trace = FALSE))
-
-```
-
-
-### How does uncertainty affect uncertainty analysis across all outputs?
-
-
-```{r}
-
-
-
-```
-
 
 
 First, "modern value" outputs (recent means)
@@ -487,6 +460,8 @@ oaatLinePlotMultiUnc(X_oaat = X_oaat_level1a,
 
 ```
 ```{r, fig.width = 12, fig.height = 12}
+
+pdf(file = 'figs/figA07.pdf', width = 12, height = 12)
 oaatLinePlotMultiUnc(X_oaat = X_oaat_level1a,
                      fitlist = emlist_km_Y_level1a,
                      n_oaat = 21,
@@ -494,6 +469,7 @@ oaatLinePlotMultiUnc(X_oaat = X_oaat_level1a,
                      linecol = 'black', 
                      shadecol = 'darkgrey'
                      )
+dev.off()
 
 
 ```
@@ -503,6 +479,7 @@ oaatLinePlotMultiUnc(X_oaat = X_oaat_level1a,
 Second, "anomaly" values (recent minus initial)
 
 ```{r, fig.width = 12, fig.height = 12}
+pdf(file = 'figs/figA08.pdf', width = 12, height = 12)
 oaatLinePlotMultiUnc(X_oaat = X_oaat_level1a,
                      fitlist = emlist_km_YAnom_level1a,
                      n_oaat = 21,
@@ -510,6 +487,7 @@ oaatLinePlotMultiUnc(X_oaat = X_oaat_level1a,
                      linecol = 'black', 
                      shadecol = 'darkgrey'
                      )
+dev.off()
 
 
 ```
@@ -521,38 +499,61 @@ What might be the trade-offs for a high (or accurate) vegetation carbon? are the
 
 Plotting these graphs in the original input space (multiplication factors) and providing the standard has the pleasing side effect of showing what you could do to standard inputs to increase or decrease a particular output.
 
+### How does uncertainty affect uncertainty analysis across all outputs?
+
+```{r}
+# Use this to build a list
+
+Y_const_level1a_scaled_list <- mat2list(Y_const_level1a_scaled)
+fit_list_const_level1a <- mclapply(X = Y_const_level1a_scaled_list, FUN = km, formula = ~., design = X_level1a,
+                                   mc.cores = 4, control = list(trace = FALSE))
+
+```
+
+```{r}
+
+Y_oaat_const_level1a_scaled <- matrix(ncol = ncol(Y_const_level1a_scaled), nrow = nrow(X_oaat_level1a))
+
+for(i in 1:ncol(Y_const_level1a_scaled)){
+
+  y_oaat <- predict.km(fit_list_const_level1a[[i]], newdata = X_oaat_level1a, type = 'UK')
+  Y_oaat_const_level1a_scaled[,i] <- y_oaat$mean
+}
+
+```
+
 ```{r, fig.width=10, fig.height = 10}
 Y_oaat_const_level1a_scaled_norm <- normalize(Y_oaat_const_level1a_scaled)
 
         oaatLinePlotMulti <- function(X_oaat, Y_oaat, n_oaat, nr, nc, cols, ...){
-  
+
           par(mfrow = c(nr,nc), oma = c(0.1,0.1,3,0.1), mar = c(2,2,3,1), las = 1)
-  
+
           for(i in 1:ncol(X_oaat)){
             ix <- seq(from = ((i*n_oaat) - (n_oaat-1)), to =  (i*n_oaat), by = 1)
-    
+
             plot(X_oaat[ix,i], Y_oaat[ix,1],
                  ylim = c(0,1),
                  xlab = colnames(X_oaat)[i],
                  type= 'n',
                  bty = 'n')
-  
+
             for(j in 1:ncol(Y_oaat)){
               lines(X_oaat[ix,i], Y_oaat[ix, j], lty = 'solid', col = cols[j], ...)
               abline(v = 1, lty = 'dashed', col = 'grey')
               mtext(colnames(X_oaat)[i], side = 3, line = 0.5)
-  
+
             }
-  
+
           }
-    
+
         }
 
-X_oaat_level1a_unnorm <- unnormalize(X_oaat_level1a, un_mins = lhs_min, un_maxes = lhs_max)        
+X_oaat_level1a_unnorm <- unnormalize(X_oaat_level1a, un_mins = lhs_min, un_maxes = lhs_max)
 #pdf(file = 'figs/Y_oaat_const_level1a_scaled_norm.pdf', width = 10, height = 10)
 oaatLinePlotMulti(X_oaat = X_oaat_level1a_unnorm, Y_oaat = Y_oaat_const_level1a_scaled_norm ,  n_oaat = 21, nr = 6, nc = 6,
                   lwd = 3, col = cbPal[c(1,2,6,8)])
-  
+
 reset()
 legend('top', c('nbp', 'npp', 'csoil', 'cveg'), col = cbPal[c(1,2,6,8)], lty = 'solid', lwd = 3, horiz = TRUE)
 #dev.off()
@@ -662,7 +663,7 @@ legend('top', c('nbp', 'npp', 'csoil', 'cveg'), col = cbPal[c(1,2,6,8)], lty = '
 ```{r}
 Y_sum_level1a_wave01_list <- mat2list(Y_sum_level1a_wave01)
 
-emlist_km_Y_level1a_wave01_file <- "data/emlist_km_Y_level1a_wave01_2022-09-21.rdata" 
+emlist_km_Y_level1a_wave01_file <- "data/emlist_km_Y_level1a_wave01_2023-08-01.rdata" 
 
 if (file.exists(emlist_km_Y_level1a_wave01_file)) {
   load(emlist_km_Y_level1a_wave01_file)
@@ -682,7 +683,7 @@ if (file.exists(emlist_km_Y_level1a_wave01_file)) {
 ```{r}
 
 
-oaat_level1a_wave01_Y_file <- 'data/oaat_level1a_wave01_Y.rdata'
+oaat_level1a_wave01_Y_file <- 'data/oaat_level1a_wave01_Y_2023-08-01.rdata'
 
 if (file.exists(oaat_level1a_wave01_Y_file)) {
   load(oaat_level1a_wave01_Y_file)
@@ -724,7 +725,7 @@ oaatSensvarSummaryPlot(oat_var_sensmat_level1a_wave01_Y)
 ```{r}
 YAnom_sum_level1a_wave01_list <- mat2list(YAnom_sum_level1a_wave01)
 
-emlist_km_Y_level1a_wave01_file <- 'data/emlist_km_Y_level1a_wave01_file_2022-09-21.rdata' 
+emlist_km_Y_level1a_wave01_file <- 'data/emlist_km_Y_level1a_wave01_file_2023-08-01.rdata' 
 
 if (file.exists(emlist_km_Y_level1a_wave01_file)) {
   load(emlist_km_Y_level1a_wave01_file)
@@ -790,7 +791,7 @@ Create a list of sensitivity analyses, one for each column of the "sum" (modern)
 (This now uses wave01 data)
 ```{r}
 
-MF_Y_sum_level1a_file <- 'data/MF_Y_sum_level1a.rdata'
+MF_Y_sum_level1a_file <- 'data/MF_Y_sum_level1a_2023-08-01.rdata'
 
 if(file.exists(MF_Y_sum_level1a_file )){
   
@@ -824,10 +825,11 @@ rownames(FAST_total_Y_sum_level1a) <- colnames(Y_sum_level1a)
 
 Plot the summary matrix
 ```{r, fig.width = 8, fig.height = 10, message = FALSE, warning=FALSE}
-#pdf(file = 'figs/figA05.pdf', width = 7, height = 8)
+pdf(file = 'figs/figA09.pdf', width = 7, height = 8)
 #pdf(file = 'figs/FAST_sensmat_Y_level1a_wave01.pdf', width = 7, height = 8)
+
 sensMatSummaryPlot(FAST_total_Y_sum_level1a)
-#dev.off()
+dev.off()
 
 ```
 
@@ -835,7 +837,7 @@ sensMatSummaryPlot(FAST_total_Y_sum_level1a)
 Now create a list of sensitivity analyses for the anomaly at the end of the run.
 ```{r}
 
-MF_YAnom_sum_level1a_file <- 'data/MF_YAnom_sum_level1a.rdata'
+MF_YAnom_sum_level1a_file <- 'data/MF_YAnom_sum_level1a_2023-08-01.rdata'
 
 if(file.exists(MF_YAnom_sum_level1a_file )){
   
@@ -874,8 +876,10 @@ Plot the sensitivity summary matrix
 ```{r, fig.width = 8, fig.height = 10}
 
 #pdf(file = 'figs/figA06.pdf', width = 7, height = 8)
+# Becomes figure A10 for revised submission
+pdf(file = 'figs/figA10.pdf', width = 7, height = 8)
 sensMatSummaryPlot(FAST_total_YAnom_sum_level1a)
-#dev.off()
+dev.off()
 
 ```
 
