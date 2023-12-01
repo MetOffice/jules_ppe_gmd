@@ -1,7 +1,7 @@
 ---
 title: "Sensitivity Analysis Earth System configuration of JULES"
 author: "Doug McNeall"
-date: "21/09/2022"
+date: "02/12/2023"
 output: 
     html_notebook:
         toc: true
@@ -416,6 +416,14 @@ It's hard to maintain a high vegetation carbon in particular.
 Further idea: What parameter values might you choose to do this, and what might be the trade-offs you have to make?
 
 
+```{r}
+# Use this to build a list
+
+Y_const_level1a_scaled_list <- mat2list(Y_const_level1a_scaled)
+fit_list_const_level1a <- mclapply(X = Y_const_level1a_scaled_list, FUN = km, formula = ~., design = X_level1a,
+                                   mc.cores = 4, control = list(trace = FALSE))
+
+```
 
 ```{r}
 # Check that oatSensVar and the plotting make sense
@@ -501,14 +509,7 @@ Plotting these graphs in the original input space (multiplication factors) and p
 
 ### How does uncertainty affect uncertainty analysis across all outputs?
 
-```{r}
-# Use this to build a list
 
-Y_const_level1a_scaled_list <- mat2list(Y_const_level1a_scaled)
-fit_list_const_level1a <- mclapply(X = Y_const_level1a_scaled_list, FUN = km, formula = ~., design = X_level1a,
-                                   mc.cores = 4, control = list(trace = FALSE))
-
-```
 
 ```{r}
 
@@ -648,14 +649,14 @@ for(i in 1:ncol(Y_oaat_const_level1a_wave01_scaled)){
 ```{r, fig.width=10, fig.height = 10}
 Y_oaat_const_level1a_wave01_scaled_norm <- normalize(Y_oaat_const_level1a_wave01_scaled)
 
-#pdf(file = 'figs/fig09.pdf', width = 10, height = 10)
+pdf(file = 'figs/fig11.pdf', width = 10, height = 10)
 #pdf(file = 'figs/Y_oaat_const_level1a_wave01_scaled_norm.pdf', width = 10, height = 10)
 oaatLinePlotMulti(X_oaat = X_oaat_level1a_unnorm, Y_oaat = Y_oaat_const_level1a_wave01_scaled_norm ,  n_oaat = 21, nr = 6, nc = 6,
                   lwd = 3, col = cbPal[c(1,2,6,8)])
   
 reset()
 legend('top', c('nbp', 'npp', 'csoil', 'cveg'), col = cbPal[c(1,2,6,8)], lty = 'solid', lwd = 3, horiz = TRUE)
-#dev.off()
+dev.off()
 
 ```
 
@@ -712,11 +713,11 @@ colnames(oat_var_sensmat_level1a_wave01_Y) <- colnames(X_level1a)
 
 ```{r, fig.width = 7, fig.height = 8}
 
-#pdf(file = 'figs/fig07.pdf', width = 7, height = 8)
+pdf(file = 'figs/fig09.pdf', width = 7, height = 8)
 #pdf(file = 'figs/oat_var_sensmat_level1a_wave01_Y.pdf', width = 7, height = 8)
 oaatSensvarSummaryPlot(oat_var_sensmat_level1a_wave01_Y)
 
-#dev.off()
+dev.off()
 
 ```
 
@@ -766,11 +767,11 @@ colnames(oat_var_sensmat_level1a_wave01_YAnom) <- colnames(X_level1a)
 
 ```{r, fig.width = 7, fig.height = 8}
 
-#pdf(file = 'figs/fig08.pdf', width = 7, height = 8)
+pdf(file = 'figs/fig10.pdf', width = 7, height = 8)
 #pdf(file = 'figs/oat_var_sensmat_level1a_wave01_YAnom.pdf', width = 7, height = 8)
 oaatSensvarSummaryPlot(oat_var_sensmat_level1a_wave01_YAnom)
 
-#dev.off()
+dev.off()
 
 ```
 
@@ -1008,7 +1009,7 @@ rownames(mcf_summary) <- c('nbp', 'npp', 'cSoil', 'cVeg', 'all')
 
 
 ```{r, fig.width = 6, fig.height = 8}
-pdf(file = 'figs/fig10.pdf', width = 6, height = 8 )
+pdf(file = 'figs/fig12.pdf', width = 6, height = 8 )
 #pdf(file = 'figs/MCF_sensmat_Yconst_level1a_wave01.pdf', width = 6, height = 8 )
 sensMatSummaryPlot(mcf_summary)
 dev.off()
